@@ -1,0 +1,53 @@
+
+##BEGIN ADDED SECTION
+
+function deleteBranch()
+{
+  if [ $# -ne 1 ]; then
+    echo "USAGE: deleteBranch <branchname>"
+  else
+    eval "git branch -D $1"
+    eval "git push origin --delete $1"
+  fi
+}
+
+function createBranch()
+{
+  if [ $# -ne 1 ]; then
+    echo "USAGE: createBranch <branchname>"
+  else
+    eval "git checkout -b $1"
+    eval "gpush"
+    eval "git branch --set-upstream-to=origin/$1 $1"
+    eval "git pull"
+  fi
+}
+
+function search()
+{
+  script_parameters="<find phrase> (<grep args>) (<grep phrase>)"
+
+  Excludes="-not -path '*build/generated*'"
+  Excludes="$Excludes -not -path '*build/outputs*'"
+  Excludes="$Excludes -not -path '*intermediates*'"
+  Excludes="$Excludes -not -path '*androidTest*'"
+  Excludes="$Excludes -not -path '*basedatamodel*'"
+
+  if [ $# -eq 1 ]; then
+    eval "find * -iname '$1' $Excludes"
+  elif [ $# -eq 2 ]; then
+    eval "find * -iname '$1' $Excludes | xargs grep '$2'"
+  elif [ $# -eq 3 ]; then
+    eval "find * -iname '$1' $Excludes | xargs grep $2 '$3'"
+  else
+    echo "USAGE: search $script_parameters"
+    echo "ex: search \"*.java\" \"some text\""
+  fi
+}
+
+alias fu='sudo $(fc -ln | tail -n2 | head -n1)'
+alias gbuild='./gradlew --daemon'
+alias gbuildo='gbuild --offline'
+alias androidstudio='~/android/android-studio/bin/studio.sh'
+
+##END ADDED SECTION
