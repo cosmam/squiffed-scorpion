@@ -5,6 +5,7 @@ EMAIL="CHANGEME@EMAIL.COM"
 INSTALLED_CHROMIUM=false
 
 APT_INSTALLS=(gnome-tweaks gparted git chromium-browser geany meld xclip)
+PYTHON_APT_INSTALLS=(python3-pip build-essential libssl-dev libffi-dev python3-dev python3-venv)
 
 function is_installed {
     if command -v $1 >/dev/null 2>&1; then
@@ -14,11 +15,15 @@ function is_installed {
     fi
 }
 
+function do_install {
+    sudo apt-get -y install $1
+}
+
 function if_install {
     if is_installed $1 = true; then
         echo "$1 is already installed";
     else
-        sudo apt-get -y install $1
+        do_install $1
         if $1 = chromium-browser; then
             INSTALLED_CHROMIUM=true
         fi
@@ -26,9 +31,13 @@ function if_install {
 }
 
 function do_apt_installs {
-    for i in ${APT_INSTALLS[@]}; do
-        if_install ${i}
-    done
+    if is_installed pip3; then 
+        echo "Python tools already installed"
+    else
+        for i in ${APT_INSTALLS[@]}; do
+            if_install ${i}
+        done
+    fi
 }
 
 function open_link {
@@ -90,12 +99,38 @@ function setup_git {
     fi
 }
 
+function install_python {
+    if is_installed pip3; then 
+        echo "Python tools already installed"
+    else
+        for i in ${PYTHON_APT_INSTALLS[@]}; do
+            do_install ${i}
+        done
+    fi
+}
+
+function install_android_studio {
+    if [ ! -f ~/android/android-studio/bin/studio.sh ]; then
+        open_link https://developer.android.com/studio/
+        read -n1 -r -p "Press any key once android studio download complete..." key
+        if [ ! -d ~/android]; then
+            mkdir ~/android
+        fi
+        unzip ~/Downloads/android-studio-ide*-linux.zip -d ~/android
+        sudo apt-get install -y libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
+    else
+        echo "Android-studio already installed"
+    fi
+}
+
 do_apt_installs
 install_chrome
 install_discord
 adjust_bashrc
 generate_ssh_key
 setup_git
+install_python
+install_android_studio
 
 if $INSTALLED_CHROMIUM; then
     chromium-browser &
