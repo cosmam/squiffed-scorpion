@@ -5,7 +5,8 @@ EMAIL="CHANGEME@EMAIL.COM"
 INSTALLED_CHROMIUM=false
 
 APT_INSTALLS=(gnome-tweaks gparted git chromium-browser geany meld xclip)
-PYTHON_APT_INSTALLS=(python3-pip build-essential libssl-dev libffi-dev python3-dev python3-venv)
+PYTHON_APT_INSTALLS=(python3-pip build-essential libssl-dev libffi-dev python3-dev python3-venv python3-kivy ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev)
+PYTHON_PIP_INSTALLS=(rx dataclasses) 
 
 function is_installed {
     if command -v $1 >/dev/null 2>&1; then
@@ -109,6 +110,12 @@ function install_python {
     fi
 }
 
+function install_python_extras {
+    for i in ${PYTHON_PIP_INSTALLS[@]}; do
+        pip3 install ${i}
+    done
+}
+
 function install_android_studio {
     if [ ! -f ~/android/android-studio/bin/studio.sh ]; then
         open_link https://developer.android.com/studio/
@@ -130,6 +137,7 @@ adjust_bashrc
 generate_ssh_key
 setup_git
 install_python
+install_python_extras
 install_android_studio
 
 if $INSTALLED_CHROMIUM; then
