@@ -4,7 +4,7 @@ EMAIL="CHANGEME@EMAIL.COM"
 
 INSTALLED_CHROMIUM=false
 
-APT_INSTALLS=(gnome-tweaks gparted git chromium-browser geany meld xclip)
+APT_INSTALLS=(gnome-tweaks gparted git chromium-browser geany meld xclip sqlite3 sqlitebrowser)
 PYTHON_APT_INSTALLS=(python3-pip build-essential libssl-dev libffi-dev python3-dev python3-venv python3-kivy ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev)
 PYTHON_PIP_INSTALLS=(rx dataclasses) 
 
